@@ -10,9 +10,9 @@
     <item
         android:id="@+id/comment"
         android:icon="@drawable/ic_people"
-        android:title="Profile" />
+        android:title="Message" />
     <item
         android:id="@+id/like"
         android:icon="@drawable/ic_like"
-        android:title="Settings" />
+        android:title="Favorite" />
 </menu>
