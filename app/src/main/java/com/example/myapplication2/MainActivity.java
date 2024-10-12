@@ -1,34 +1,27 @@
 package com.example.myapplication2;
 
-import static com.example.myapplication2.R.*;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-
-import com.example.myapplication2.fragment.ViewPagerAdapter; // Sử dụng FragmentPagerAdapter
+import com.example.myapplication2.fragment.ViewPagerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ViewPager viewpager; // Sử dụng ViewPager
+    private ViewPager viewpager;
     private BottomNavigationView bottomNavigationView;
 
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
         viewpager = findViewById(R.id.viewpager);
@@ -38,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewpager.setAdapter(adapter); // Thiết lập adapter cho ViewPager
 
+        // Xử lý khi trang được thay đổi
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -46,19 +40,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-                        bottomNavigationView.getMenu().findItem(R.id.home).setChecked(true);
-                        break;
-                    case 1:
-                        bottomNavigationView.getMenu().findItem(R.id.cart).setChecked(true);
-                        break;
-                    case 2:
-                        bottomNavigationView.getMenu().findItem(R.id.comment).setChecked(true);
-                        break;
-                    case 3:
-                        bottomNavigationView.getMenu().findItem(R.id.like).setChecked(true);
-                        break;
+                // Sử dụng if-else thay cho switch-case để tránh lỗi Constant expression required
+                if (position == 0) {
+                    bottomNavigationView.getMenu().findItem(R.id.home).setChecked(true);
+                } else if (position == 1) {
+                    bottomNavigationView.getMenu().findItem(R.id.cart).setChecked(true);
+                } else if (position == 2) {
+                    bottomNavigationView.getMenu().findItem(R.id.comment).setChecked(true);
+                } else if (position == 3) {
+                    bottomNavigationView.getMenu().findItem(R.id.like).setChecked(true);
                 }
             }
 
@@ -68,12 +58,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Thiết lập Padding cho View
+        // Xử lý khi click vào các mục trong BottomNavigationView
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.home) {
+                viewpager.setCurrentItem(0);
+                return true;
+            } else if (itemId == R.id.cart) {
+                viewpager.setCurrentItem(1);
+                return true;
+            } else if (itemId == R.id.comment) {
+                viewpager.setCurrentItem(2);
+                return true;
+            } else if (itemId == R.id.like) {
+                viewpager.setCurrentItem(3);
+                return true;
+            }
+            return false;
+        });
+
+        // Thiết lập Padding cho View để xử lý các thanh hệ thống như Status bar, Navigation bar
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
     }
 }
